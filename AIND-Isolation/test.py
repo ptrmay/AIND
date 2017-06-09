@@ -3,11 +3,12 @@ player1 = RandomPlayer()
 player2 = GreedyPlayer()
 player3 = MinimaxPlayer()
 player4 = MinimaxPlayer()
+player5 = AlphaBetaPlayer()
 
-game = Board(player4, player3)
+game = Board(player4, player5)
 game.apply_move((2, 3))
 game.apply_move((0, 5))
-player3.minimax(game,2)
+player5.alphabeta(game,2)
 
 
 game.apply_move((2, 3))

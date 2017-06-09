@@ -350,14 +350,13 @@ class AlphaBetaPlayer(IsolationPlayer):
         for a in legal_moves:
             new_value = self.minValue(game.forecast_move(a), depth-1,
                                       alpha, beta )
-            
+            alpha = max(alpha, max_value)
             if(new_value > max_value):
                 max_value = new_value
                 best_move = a
             
-            if (new_value >= beta):
-                return best_move
-            alpha = max(alpha, new_value)
+#            if (max_value >= beta):
+#                return best_move
             
         return best_move
 
