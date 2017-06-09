@@ -4,19 +4,23 @@ def cross(a, b):
 rows = 'ABCDEFGHI'
 cols = '123456789'
 
+
 boxes = cross(rows, cols)
-diag_units = [['A1', 'B2', 'C3', 'D4', 'E5', 'F6', 'G7', 'H8', 'I9']]
+diag_units = [['A1', 'B2', 'C3', 'D4', 'E5', 'F6', 'G7', 'H8','I9'],
+               ['A9','B8','C7','D6','E5','F4','G3','H2','I1']]
 row_units = [cross(r, cols) for r in rows]
 column_units = [cross(rows, c) for c in cols]
 square_units = [cross(rs, cs) for rs in ('ABC', 'DEF', 'GHI') for cs in ('123', '456', '789')]
+
+# define new peers based on diag_units for Diagonal Soduku implementation 
 unitlist = row_units + column_units + square_units + diag_units
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
 peers = dict((s, set(sum(units[s], [])) - set([s])) for s in boxes)
 
+# keep old peers for naked_twins funciton
 unitlist_old = row_units + column_units + square_units #+ diag_units
 units_old = dict((s, [u for u in unitlist if s in u]) for s in boxes)
 peers_old = dict((s, set(sum(units[s], [])) - set([s])) for s in boxes)
-
 
 def assign_value(values, box, value):
     """
@@ -43,29 +47,22 @@ def naked_twins(values):
     Returns:
         the values dictionary with the naked twins eliminated from peers.
     """
-    # rows = 'ABCDEFGHI'
-    # cols = '123456789'
-    #
-    # boxes = cross(rows, cols)
-    # diag_units = [['A1','B2','C3','D4','E5','F6','G7','H8','I9']]
-    # row_units = [cross(r, cols) for r in rows]
-    # column_units = [cross(rows, c) for c in cols]
-    # square_units = [cross(rs, cs) for rs in ('ABC', 'DEF', 'GHI') for cs in ('123', '456', '789')]
-    # unitlist = row_units + column_units + square_units + diag_units
-    # units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
-    # peers = dict((s, set(sum(units[s], [])) - set([s])) for s in boxes)
 
     import collections
-
+    
+    # filter for boxes which have 2 digits
     dic = dict(([(s, values[s]) for s in boxes if len(values[s]) == 2]))
+    # count how often the same digit combination occurs
     value_occurrences = collections.Counter(dic.values())
+    # filter for boxes which have twins
     filtered_dict = {key: value for key, value in dic.items() if value_occurrences[value] > 1}
-
+    
+    # check for every 'twin box' if one its peer boxes has the same digit(s). If yes remove digit(s)
     for filt_key in filtered_dict.keys():
         sub_keys = [key for key in peers_old[filt_key] if values[key] == filtered_dict[filt_key]]
         if sub_keys != []:
             for key in sub_keys:
-                for i in range(0, 8):
+                for i in range(0, 9):
                     if (len(set(row_units[i]) - {filt_key} - {key}) == 7):
                         for j in row_units[i]:
                             if ((j != filt_key) & (j != key)):
@@ -77,6 +74,7 @@ def naked_twins(values):
                                 for k in range(0, 2):
                                     values[j] = values[j].replace(values[filt_key][k], '')
                     if (len(set(square_units[i]) - {filt_key} - {key}) == 7):
+                        print(key)
                         for j in square_units[i]:
                             if ((j != filt_key) & (j != key)):
                                 for k in range(0, 2):
@@ -145,17 +143,25 @@ def reduce_puzzle(values):
     Input: A sudoku in dictionary form.
     Output: The resulting sudoku in dictionary form.
     """
-    solved_values = [box for box in values.keys() if len(values[box]) == 1]
     stalled = False
     while not stalled:
+        # Check how many boxes have a determined value
         solved_values_before = len([box for box in values.keys() if len(values[box]) == 1])
+        # Use the Eliminate Strategy
         values = eliminate(values)
+        # Use the Only Choice Strategy
         values = only_choice(values)
+        # Check how many boxes have a determined value, to compare
         solved_values_after = len([box for box in values.keys() if len(values[box]) == 1])
+        # If no new values were added, stop the loop.
         stalled = solved_values_before == solved_values_after
+        #print([box for box in values.keys() if len(values[box]) == 0])
+        #‚print(stalled)
+        # Sanity check, return False if there is a box with zero available values:
         if len([box for box in values.keys() if len(values[box]) == 0]):
             return False
     return values
+
 def search(values):
 
     "Using depth-first search and propagation, try all possible values."

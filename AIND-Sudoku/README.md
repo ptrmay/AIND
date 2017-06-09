@@ -3,11 +3,14 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: *Student should provide answer here*
+A: In every iteration of the constraint propagation algorithmus the size of the search space gets smaller or stays at least the same.
+ In the naked twins function, at first the search space for eliminating digits from the boxes gets narrowed to boxes  (B1) which are peers of twin boxes. Then the ultimate search space are the boxes which are a subset of B1 and have digit(s) which are a subset of the numbers of the twin boxes.
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: *Student should provide answer here*
+A: In the constraint propagation algorithm for the diagonal soduko problem, in every iteration the search space gets narrowed down by:
+- Elimination of digits of the respective boxes whose peer boxes have one digit and are equal to this one digit. Peer boxes are boxes which are in the same unit, row or column. For boxes which are in one of the two diagonals, peer boxes are also boxes which are in the same diagonal.
+- If there is only one box in a unit which would allow a certain digit, then that box must be assigned that digit.
 
 ### Install
 
