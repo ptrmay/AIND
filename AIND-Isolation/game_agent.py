@@ -21,7 +21,7 @@ def custom_score(game, player):
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
     
-    return float(own_moves - opp_moves)
+    return float(own_moves - 5 * opp_moves)#-2
 
 
 def custom_score_2(game, player):
@@ -47,8 +47,16 @@ def custom_score_2(game, player):
         The heuristic value of the current game state to the specified player.
     """
     # TODO: finish this function!
-    raise NotImplementedError
+    if game.is_loser(player):
+        return float("-inf")
 
+    if game.is_winner(player):
+        return float("inf")
+
+    own_moves = len(game.get_legal_moves(player))
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    
+    return float(own_moves - 4 * opp_moves)#-3
 
 def custom_score_3(game, player):
     """Calculate the heuristic value of a game state from the point of view
@@ -72,8 +80,16 @@ def custom_score_3(game, player):
     float
         The heuristic value of the current game state to the specified player.
     """
-    # TODO: finish this function!
-    raise NotImplementedError
+    if game.is_loser(player):
+        return float("-inf")
+
+    if game.is_winner(player):
+        return float("inf")
+
+    own_moves = len(game.get_legal_moves(player))
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    
+    return float(3 * own_moves - opp_moves) #2
 
 
 class IsolationPlayer:
@@ -110,18 +126,18 @@ class MinimaxPlayer(IsolationPlayer):
     search. You must finish and test this player to make sure it properly uses
     minimax to return a good move before the search time limit expires.
     """
-    def score(self, game):
-
-        if game.is_loser(self):
-            return float("-inf")
-    
-        if game.is_winner(self):
-            return float("inf")
-    
-        own_moves = len(game.get_legal_moves(self))
-        opp_moves = len(game.get_legal_moves(game.get_opponent(self)))
-        
-        return float(own_moves - opp_moves)
+#    def score(self, game):
+#
+#        if game.is_loser(self):
+#            return float("-inf")
+#    
+#        if game.is_winner(self):
+#            return float("inf")
+#    
+#        own_moves = len(game.get_legal_moves(self))
+#        opp_moves = len(game.get_legal_moves(game.get_opponent(self)))
+#        
+#        return float(own_moves - opp_moves)
     
     def get_move(self, game, time_left):
         """Search for the best move from the available legal moves and return a
@@ -237,18 +253,18 @@ class AlphaBetaPlayer(IsolationPlayer):
     search with alpha-beta pruning. You must finish and test this player to
     make sure it returns a good move before the search time limit expires.
     """
-    def score(self, game):
-
-        if game.is_loser(self):
-            return float("-inf")
-    
-        if game.is_winner(self):
-            return float("inf")
-    
-        own_moves = len(game.get_legal_moves(self))
-        opp_moves = len(game.get_legal_moves(game.get_opponent(self)))
-        
-        return float(own_moves - opp_moves)
+#    def score(self, game):
+#
+#        if game.is_loser(self):
+#            return float("-inf")
+#    
+#        if game.is_winner(self):
+#            return float("inf")
+#    
+#        own_moves = len(game.get_legal_moves(self))
+#        opp_moves = len(game.get_legal_moves(game.get_opponent(self)))
+#        
+#        return float(own_moves - opp_moves)
     
     def get_move(self, game, time_left):
         """Search for the best move from the available legal moves and return a
@@ -282,8 +298,21 @@ class AlphaBetaPlayer(IsolationPlayer):
         """
         self.time_left = time_left
 
-        # TODO: finish this function!
-        raise NotImplementedError
+        # Initialize the best move so that this function returns something
+        # in case the search fails due to timeout
+        best_move = (-1, -1)
+
+        try:
+            # The try/except block will automatically catch the exception
+            # raised when the timer is about to expire.
+            for i in range(1,101):
+                best_move = self.alphabeta(game, i)
+
+        except SearchTimeout:
+            pass  # Handle any actions required after timeout as needed
+
+        # Return the best move from the last completed search iteration
+        return best_move
         
     def maxValue(self, game, depth, alpha, beta):
         if self.time_left() < self.TIMER_THRESHOLD:
