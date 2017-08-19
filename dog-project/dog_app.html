@@ -13442,7 +13442,8 @@ y/W51mWwuFyX63J9rnUZLC7X5bpcn2tdBovLdbku1+dal8Hicl2uy/W51mWwuFyX63J9rvX/Ac1N
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Question 2:</strong> This algorithmic choice necessitates that we communicate to the user that we accept human images only when they provide a clear view of a face (otherwise, we risk having unneccessarily frustrated users!). In your opinion, is this a reasonable expectation to pose on the user? If not, can you think of a way to detect humans in images that does not necessitate an image with a clearly presented face?</p>
-<p><strong>Answer:</strong></p>
+<p><strong>Answer:</strong>
+Given you have a labeled dataset which has among others clearly and not clearly presented faces, you could train a CNN which should be a good human face detector, also for not clearly presented faces.</p>
 <p>We suggest the face detector from OpenCV as a potential way to detect human images in your algorithm, but you are free to explore other approaches, especially approaches that make use of deep learning :).  Please use the code cell below to design and test your own face detection algorithm.  If you decide to pursue this <em>optional</em> task, report performance on each of the datasets.</p>
 
 </div>
