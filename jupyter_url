@@ -1,2 +1,4 @@
 ssh aind2@34.209.106.136
 http://34.209.106.136:8888/tree
+
+Peters-MBP:AIND peter$ git reset --hard 23b1c106904cdf4b78c4f57525ecb1b1f8ab94b3
